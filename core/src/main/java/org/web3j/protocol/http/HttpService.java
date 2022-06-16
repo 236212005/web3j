@@ -31,6 +31,7 @@ import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import okio.Buffer;
 import okio.BufferedSource;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,40 +40,44 @@ import org.web3j.protocol.exceptions.ClientConnectionException;
 
 import static okhttp3.ConnectionSpec.CLEARTEXT;
 
-/** HTTP implementation of our services API. */
+/**
+ * HTTP implementation of our services API.
+ */
 public class HttpService extends Service {
 
-    /** Copied from {@link ConnectionSpec#APPROVED_CIPHER_SUITES}. */
+    /**
+     * Copied from {@link ConnectionSpec#APPROVED_CIPHER_SUITES}.
+     */
     @SuppressWarnings("JavadocReference")
     private static final CipherSuite[] INFURA_CIPHER_SUITES =
-            new CipherSuite[] {
-                CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
-                CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
-                CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
-                CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
-                CipherSuite.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
-                CipherSuite.TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256,
+            new CipherSuite[]{
+                    CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
+                    CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
+                    CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
+                    CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
+                    CipherSuite.TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305_SHA256,
+                    CipherSuite.TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256,
 
-                // Note that the following cipher suites are all on HTTP/2's bad cipher suites list.
-                // We'll
-                // continue to include them until better suites are commonly available. For example,
-                // none
-                // of the better cipher suites listed above shipped with Android 4.4 or Java 7.
-                CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,
-                CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,
-                CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
-                CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,
-                CipherSuite.TLS_RSA_WITH_AES_128_GCM_SHA256,
-                CipherSuite.TLS_RSA_WITH_AES_256_GCM_SHA384,
-                CipherSuite.TLS_RSA_WITH_AES_128_CBC_SHA,
-                CipherSuite.TLS_RSA_WITH_AES_256_CBC_SHA,
-                CipherSuite.TLS_RSA_WITH_3DES_EDE_CBC_SHA,
+                    // Note that the following cipher suites are all on HTTP/2's bad cipher suites list.
+                    // We'll
+                    // continue to include them until better suites are commonly available. For example,
+                    // none
+                    // of the better cipher suites listed above shipped with Android 4.4 or Java 7.
+                    CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,
+                    CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,
+                    CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA,
+                    CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA,
+                    CipherSuite.TLS_RSA_WITH_AES_128_GCM_SHA256,
+                    CipherSuite.TLS_RSA_WITH_AES_256_GCM_SHA384,
+                    CipherSuite.TLS_RSA_WITH_AES_128_CBC_SHA,
+                    CipherSuite.TLS_RSA_WITH_AES_256_CBC_SHA,
+                    CipherSuite.TLS_RSA_WITH_3DES_EDE_CBC_SHA,
 
-                // Additional INFURA CipherSuites
-                CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,
-                CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,
-                CipherSuite.TLS_RSA_WITH_AES_128_CBC_SHA256,
-                CipherSuite.TLS_RSA_WITH_AES_256_CBC_SHA256
+                    // Additional INFURA CipherSuites
+                    CipherSuite.TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,
+                    CipherSuite.TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384,
+                    CipherSuite.TLS_RSA_WITH_AES_128_CBC_SHA256,
+                    CipherSuite.TLS_RSA_WITH_AES_256_CBC_SHA256
             };
 
     private static final ConnectionSpec INFURA_CIPHER_SUITE_SPEC =
@@ -80,7 +85,9 @@ public class HttpService extends Service {
                     .cipherSuites(INFURA_CIPHER_SUITES)
                     .build();
 
-    /** The list of {@link ConnectionSpec} instances used by the connection. */
+    /**
+     * The list of {@link ConnectionSpec} instances used by the connection.
+     */
     private static final List<ConnectionSpec> CONNECTION_SPEC_LIST =
             Arrays.asList(INFURA_CIPHER_SUITE_SPEC, CLEARTEXT);
 
@@ -156,7 +163,7 @@ public class HttpService extends Service {
     @Override
     protected InputStream performIO(String request) throws IOException {
 
-        RequestBody requestBody = RequestBody.create(request, JSON_MEDIA_TYPE);
+        RequestBody requestBody = RequestBody.create(JSON_MEDIA_TYPE, request);
         Headers headers = buildHeaders();
 
         okhttp3.Request httpRequest =
@@ -235,5 +242,6 @@ public class HttpService extends Service {
     }
 
     @Override
-    public void close() throws IOException {}
+    public void close() throws IOException {
+    }
 }

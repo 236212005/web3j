@@ -16,9 +16,9 @@ dependencies {
             "org.java-websocket:Java-WebSocket:$javaWebSocketVersion",
             "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion",
             "org.slf4j:slf4j-api:$slf4jVersion"
-    testCompile project(path: ':crypto', configuration: 'testArtifacts'),
-    "nl.jqno.equalsverifier:equalsverifier:$equalsverifierVersion",
-    "ch.qos.logback:logback-classic:$logbackVersion"
+//    testCompile project(path: ':crypto', configuration: 'testArtifacts'),
+//    "nl.jqno.equalsverifier:equalsverifier:$equalsverifierVersion",
+//    "ch.qos.logback:logback-classic:$logbackVersion"
 }
 
 task createProperties(dependsOn: processResources) doLast {
@@ -75,6 +75,27 @@ gitPublish {
 }
 classes { dependsOn createProperties }
 
-configurations { testArtifacts.extendsFrom testRuntime }
+//configurations { testArtifacts.extendsFrom testRuntime }
+//
+//artifacts { testArtifacts testsJar }
 
-artifacts { testArtifacts testsJar }
+apply plugin: 'maven'
+
+group = 'org.web3j'
+// artifactId is taken by default, from folder name
+version = '4.9.2-SNAPSHOT'
+
+task writeNewPom {
+    pom {
+        project {
+            inceptionYear '2014'
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+        }
+    }.writeTo("pom.xml")
+}
