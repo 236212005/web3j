@@ -21,6 +21,7 @@
         <module>crypto</module>
         <module>rlp</module>
         <module>tuples</module>
+        <module>codegen</module>
         <module>utils</module>
     </modules>
     <dependencies>

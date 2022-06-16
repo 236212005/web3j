@@ -37,3 +37,24 @@ file("src/test/resources/solidity").listFiles().each { File file ->
         test.dependsOn generateTask
     }
 }
+
+apply plugin: 'maven'
+
+group = 'org.web3j'
+// artifactId is taken by default, from folder name
+version = '4.9.2-SNAPSHOT'
+
+task writeNewPom {
+    pom {
+        project {
+            inceptionYear '2014'
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+        }
+    }.writeTo("pom.xml")
+}
